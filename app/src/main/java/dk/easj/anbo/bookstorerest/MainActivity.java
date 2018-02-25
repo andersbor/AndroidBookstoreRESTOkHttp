@@ -23,6 +23,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView listHeader = new TextView(this);
+        listHeader.setText("Books");
+        listHeader.setTextAppearance(this, android.R.style.TextAppearance_Large);
+        ListView listView = findViewById(R.id.main_books_listview);
+        listView.addHeaderView(listHeader);
     }
 
     @Override
