@@ -1,10 +1,19 @@
 package dk.easj.anbo.bookstorerest;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Book implements Serializable {
+    @SerializedName("Id") // Name of JSON attribute. Used for GSON de-serialization
     private int id;
-    private String title, publisher, author;
+    @SerializedName("Title")
+    private String title;
+    @SerializedName("Publisher")
+    private String publisher;
+    @SerializedName("Author")
+    private String author;
+    @SerializedName("Price")
     private double price;
 
     public Book() {

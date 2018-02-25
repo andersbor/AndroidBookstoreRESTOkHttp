@@ -19,6 +19,11 @@ public class BookListItemAdapter extends ArrayAdapter<Book> {
         this.resource = resource;
     }
 
+    public BookListItemAdapter(Context context, int resource, Book[] objects) {
+        super(context, resource, objects);
+        this.resource = resource;
+    }
+
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {

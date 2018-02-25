@@ -10,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadTask extends ReadHttpTask {
         @Override
-        protected void onPostExecute(CharSequence charSequence) {
+        protected void onPostExecute(CharSequence jsonString) {
             TextView messageTextView = findViewById(R.id.main_message_textview);
-            //messageTextView.setText(charSequence);
+            /*
             final List<Book> books = new ArrayList<>();
             try {
-                JSONArray array = new JSONArray(charSequence.toString());
+                JSONArray array = new JSONArray(jsonString.toString());
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject obj = array.getJSONObject(i);
                     String author = obj.getString("Author");
@@ -61,29 +64,35 @@ public class MainActivity extends AppCompatActivity {
                     Book book = new Book(id, author, title, publisher, price);
                     books.add(book);
                 }
-                ListView listView = findViewById(R.id.main_books_listview);
-                //ArrayAdapter<Book> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, books);
-                BookListItemAdapter adapter = new BookListItemAdapter(getBaseContext(), R.layout.booklist_item, books);
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getBaseContext(), BookActivity.class);
-                        intent.putExtra("BOOK", books.get((int) id));
-                        startActivity(intent);
-                    }
-                });
-            } catch (JSONException ex) {
+                */
+            Gson gson = new GsonBuilder().create();
+            final Book[] books = gson.fromJson(jsonString.toString(), Book[].class);
+
+            ListView listView = findViewById(R.id.main_books_listview);
+            //ArrayAdapter<Book> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, books);
+            BookListItemAdapter adapter = new BookListItemAdapter(getBaseContext(), R.layout.booklist_item, books);
+            listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(getBaseContext(), BookActivity.class);
+                    //Book book = books.get((int) id);
+                    Book book = books[(int) id];
+                    intent.putExtra("BOOK", book);
+                    startActivity(intent);
+                }
+            });
+           /* } catch (JSONException ex) {
                 messageTextView.setText(ex.getMessage());
                 Log.e("BOOKS", ex.getMessage());
-            }
+            }*/
         }
 
         @Override
-        protected void onCancelled(CharSequence charSequence) {
+        protected void onCancelled(CharSequence message) {
             TextView messageTextView = findViewById(R.id.main_message_textview);
-            messageTextView.setText(charSequence);
-            Log.e("BOOKS", charSequence.toString());
+            messageTextView.setText(message);
+            Log.e("BOOKS", message.toString());
         }
     }
 }
