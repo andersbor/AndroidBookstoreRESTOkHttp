@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(CharSequence jsonString) {
             TextView messageTextView = findViewById(R.id.main_message_textview);
-            /*
+/*
             final List<Book> books = new ArrayList<>();
             try {
                 JSONArray array = new JSONArray(jsonString.toString());
@@ -76,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(getBaseContext(), BookActivity.class);
-                    //Book book = books.get((int) id);
-                    Book book = books[(int) id];
+                    // Book book = books.get((int) id);
+                    // Book book = books[(int) id];
+                    Book book = (Book) parent.getItemAtPosition(position);
                     intent.putExtra("BOOK", book);
                     startActivity(intent);
                 }
