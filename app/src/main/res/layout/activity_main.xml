@@ -44,6 +44,7 @@
         android:layout_gravity="bottom|end"
         android:onClick="addBook"
         android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/colorPrimary"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 

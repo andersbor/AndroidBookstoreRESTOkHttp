@@ -37,7 +37,7 @@ public class AddBookActivity extends AppCompatActivity {
         //        "{\"Title\":\"" + title + "\", \"Author\":\"" + author + "\", \"Publisher\":\"" + publisher + "\", \"Price\":" + price + "}";
 
         TextView messageView = findViewById(R.id.add_book_message_textview);
-        try {
+        try { // Alternative: make a Book object + use Gson
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("Title", title);
             jsonObject.put("Author", author);

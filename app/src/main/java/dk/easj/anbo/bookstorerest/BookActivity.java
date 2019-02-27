@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class BookActivity extends AppCompatActivity {
+    public static final String BOOK = "BOOK";
     private Book book;
     private EditText titleView, authorView, publisherView, priceView;
 
@@ -23,7 +24,7 @@ public class BookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book);
 
         Intent intent = getIntent();
-        book = (Book) intent.getSerializableExtra("BOOK");
+        book = (Book) intent.getSerializableExtra(BOOK);
 
         TextView headingView = findViewById(R.id.book_heading_textview);
         headingView.setText("Book Id=" + book.getId());
