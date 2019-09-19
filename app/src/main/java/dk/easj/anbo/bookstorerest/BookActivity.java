@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -50,6 +51,7 @@ public class BookActivity extends AppCompatActivity {
 
     public void updateBook(View view) {
         // code missing: Left as an exercise
+        Toast.makeText(this, "Update: Code missing. Left as an exercise", Toast.LENGTH_LONG).show();
     }
 
 

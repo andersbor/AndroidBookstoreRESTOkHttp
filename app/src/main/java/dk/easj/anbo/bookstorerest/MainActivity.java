@@ -1,3 +1,4 @@
+
 package dk.easj.anbo.bookstorerest;
 
 import android.content.Intent;
@@ -29,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         TextView listHeader = new TextView(this);
         listHeader.setText("Books");
-        listHeader.setTextAppearance(this, android.R.style.TextAppearance_Large);
+        listHeader.setTextAppearance(this, android.R.style.TextAppearance_Large); // deprecated
+        // https://stackoverflow.com/questions/38200019/settextappearance-deprecated-android-how-to-use/38200053
         ListView listView = findViewById(R.id.main_books_listview);
         listView.addHeaderView(listHeader);
     }
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private class ReadTask extends ReadHttpTask {
         @Override
         protected void onPostExecute(CharSequence jsonString) {
-        /*
+/*
             final List<Book> books = new ArrayList<>();
             try {
                 JSONArray array = new JSONArray(jsonString.toString());
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     Book book = new Book(id, author, title, publisher, price);
                     books.add(book);
                 }
-                */
+*/
             Gson gson = new GsonBuilder().create();
             final Book[] books = gson.fromJson(jsonString.toString(), Book[].class);
 
