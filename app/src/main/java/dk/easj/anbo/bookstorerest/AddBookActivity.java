@@ -1,8 +1,8 @@
 package dk.easj.anbo.bookstorerest;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -11,13 +11,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -62,22 +56,23 @@ public class AddBookActivity extends AppCompatActivity {
     private class PostBookOkHttpTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
+            // https://trinitytuts.com/get-and-post-request-using-okhttp-in-android-application/
             String url = strings[0];
             String postdata = strings[1];
             MediaType MEDIA_TYPE = MediaType.parse("application/json");
+            // https://stackoverflow.com/questions/57100451/okhttp3-requestbody-createcontenttype-content-deprecated
             OkHttpClient client = new OkHttpClient();
-            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata);
+            RequestBody body = RequestBody.create(postdata, MEDIA_TYPE);
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)
                     .header("Accept", "application/json")
                     .header("Content-Type", "application/json")
                     .build();
-
             try {
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
-                     return response.body().string();
+                    return response.body().string();
                 } else {
                     String message = url + "\n" + response.code() + " " + response.message();
                     return message;
@@ -93,8 +88,8 @@ public class AddBookActivity extends AppCompatActivity {
             super.onPostExecute(jsonString);
             TextView messageView = findViewById(R.id.add_book_message_textview);
             messageView.setText(jsonString);
-            Log.d("MINE", jsonString.toString());
-           //  finish();
+            Log.d("MINE", jsonString);
+            //  finish();
         }
 
         @Override
@@ -102,7 +97,7 @@ public class AddBookActivity extends AppCompatActivity {
             super.onCancelled(message);
             TextView messageView = findViewById(R.id.add_book_message_textview);
             messageView.setText(message);
-            Log.d("MINE", message.toString());
+            Log.d("MINE", message);
             //finish();
         }
     }

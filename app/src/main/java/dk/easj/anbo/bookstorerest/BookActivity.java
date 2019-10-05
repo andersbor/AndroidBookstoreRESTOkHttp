@@ -25,7 +25,6 @@ import okhttp3.Response;
 public class BookActivity extends AppCompatActivity {
     public static final String BOOK = "BOOK";
     private Book book;
-    private EditText titleView, authorView, publisherView, priceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +37,16 @@ public class BookActivity extends AppCompatActivity {
         TextView headingView = findViewById(R.id.book_heading_textview);
         headingView.setText("Book Id=" + book.getId());
 
-        titleView = findViewById(R.id.book_title_edittext);
+        EditText titleView = findViewById(R.id.book_title_edittext);
         titleView.setText(book.getTitle());
 
-        authorView = findViewById(R.id.book_author_edittext);
+        EditText authorView = findViewById(R.id.book_author_edittext);
         authorView.setText(book.getAuthor());
 
-        publisherView = findViewById(R.id.book_publisher_edittext);
+        EditText publisherView = findViewById(R.id.book_publisher_edittext);
         publisherView.setText(book.getPublisher());
 
-        priceView = findViewById(R.id.book_price_edittext);
+        EditText priceView = findViewById(R.id.book_price_edittext);
         priceView.setText(book.getPrice() + " ");
     }
 
@@ -71,7 +70,7 @@ public class BookActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

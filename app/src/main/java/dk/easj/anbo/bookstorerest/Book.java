@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Book implements Serializable {
-    @SerializedName("Id") // Name of JSON attribute. Used for GSON de-serialization
+    @SerializedName("Id") // Name of JSON attribute. Used for Gson de-serialization
     private int id;
     @SerializedName("Title")
     private String title;

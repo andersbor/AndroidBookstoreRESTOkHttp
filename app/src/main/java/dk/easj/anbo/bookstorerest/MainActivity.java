@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,13 +15,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -156,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onCancelled(String message) {
             TextView messageTextView = findViewById(R.id.main_message_textview);
             messageTextView.setText(message);
-            Log.e("BOOKS", message.toString());
+            Log.e("BOOKS", message);
         }
     }
 
