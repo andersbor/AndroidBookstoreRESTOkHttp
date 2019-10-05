@@ -19,6 +19,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class AddBookActivity extends AppCompatActivity {
 
     @Override
@@ -45,7 +51,7 @@ public class AddBookActivity extends AppCompatActivity {
             jsonObject.put("Price", price);
             String jsonDocument = jsonObject.toString();
             messageView.setText(jsonDocument);
-            PostBookTask task = new PostBookTask();
+            PostBookOkHttpTask task = new PostBookOkHttpTask();
             task.execute("http://anbo-restserviceproviderbooks.azurewebsites.net/Service1.svc/books", jsonDocument);
         } catch (JSONException ex) {
             messageView.setText(ex.getMessage());
@@ -53,66 +59,51 @@ public class AddBookActivity extends AppCompatActivity {
 
     }
 
-    private class PostBookTask extends AsyncTask<String, Void, CharSequence> {
-        //private final String JsonDocument;
-
-        //PostBookTask(String JsonDocument) {
-        //    this.JsonDocument = JsonDocument;
-        //}
-
+    private class PostBookOkHttpTask extends AsyncTask<String, Void, String> {
         @Override
-        protected CharSequence doInBackground(String... params) {
-            String urlString = params[0];
-            String jsonDocument = params[1];
+        protected String doInBackground(String... strings) {
+            String url = strings[0];
+            String postdata = strings[1];
+            MediaType MEDIA_TYPE = MediaType.parse("application/json");
+            OkHttpClient client = new OkHttpClient();
+            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .header("Accept", "application/json")
+                    .header("Content-Type", "application/json")
+                    .build();
+
             try {
-                URL url = new URL(urlString);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setRequestProperty("Accept", "application/json");
-                OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
-                osw.write(jsonDocument);
-                osw.flush();
-                osw.close();
-                int responseCode = connection.getResponseCode();
-                if (responseCode / 100 != 2) {
-                    String responseMessage = connection.getResponseMessage();
-                    throw new IOException("HTTP response code: " + responseCode + " " + responseMessage);
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                     return response.body().string();
+                } else {
+                    String message = url + "\n" + response.code() + " " + response.message();
+                    return message;
                 }
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(connection.getInputStream()));
-                String line = reader.readLine();
-                return line;
-            } catch (MalformedURLException ex) {
-                cancel(true);
-                String message = ex.getMessage() + " " + urlString;
-                Log.e("BOOK", message);
-                return message;
             } catch (IOException ex) {
-                cancel(true);
-                Log.e("BOOK", ex.getMessage());
+                Log.e("BOOKS", ex.getMessage());
                 return ex.getMessage();
             }
         }
 
         @Override
-        protected void onPostExecute(CharSequence charSequence) {
-            super.onPostExecute(charSequence);
+        protected void onPostExecute(String jsonString) {
+            super.onPostExecute(jsonString);
             TextView messageView = findViewById(R.id.add_book_message_textview);
-            messageView.setText(charSequence);
-            Log.d("MINE", charSequence.toString());
-            finish();
+            messageView.setText(jsonString);
+            Log.d("MINE", jsonString.toString());
+           //  finish();
         }
 
         @Override
-        protected void onCancelled(CharSequence charSequence) {
-            super.onCancelled(charSequence);
+        protected void onCancelled(String message) {
+            super.onCancelled(message);
             TextView messageView = findViewById(R.id.add_book_message_textview);
-            messageView.setText(charSequence);
-            Log.d("MINE", charSequence.toString());
-            finish();
+            messageView.setText(message);
+            Log.d("MINE", message.toString());
+            //finish();
         }
     }
-
 }

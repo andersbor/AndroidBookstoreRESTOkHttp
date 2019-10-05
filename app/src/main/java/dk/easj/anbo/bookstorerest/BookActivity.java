@@ -9,10 +9,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class BookActivity extends AppCompatActivity {
     public static final String BOOK = "BOOK";
@@ -44,9 +52,40 @@ public class BookActivity extends AppCompatActivity {
     }
 
     public void deleteBook(View view) {
-        DeleteTask task = new DeleteTask();
-        task.execute("http://anbo-restserviceproviderbooks.azurewebsites.net/Service1.svc/books/" + book.getId());
-        finish();
+        final String url = "http://anbo-restserviceproviderbooks.azurewebsites.net/Service1.svc/books/" + book.getId();
+        //DeleteTask task = new DeleteTask();
+        //task.execute(url);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder().url(url).delete().build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull final IOException ex) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView messageView = findViewById(R.id.book_message_textview);
+                        messageView.setText(ex.getMessage());
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView messageView = findViewById(R.id.book_message_textview);
+                        if (response.isSuccessful()) {
+                            messageView.setText("Book deleted");
+                            finish();
+                        } else {
+                            messageView.setText(url + "\n" + response.code() + " " + response.message());
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void updateBook(View view) {
