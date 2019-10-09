@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -50,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //ReadTask task = new ReadTask();
-        //task.execute(BASE_URI);
+        ReadTask task = new ReadTask();
+        task.execute(BASE_URI);
 
-        getDataUsingOkHttpEnqueue();
+        //getDataUsingOkHttpEnqueue();
     }
 
     private void getDataUsingOkHttpEnqueue() {
@@ -100,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
     private class ReadTask extends AsyncTask<String, Void, String> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             String uri = strings[0];
             OkHttpClient client = new OkHttpClient();
@@ -121,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 cancel(true);
                 return ex.getMessage();
             }
+
         }
 
         @Override
@@ -139,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
                     books.add(book);
                 }
 */
+            ProgressBar progressBar = findViewById(R.id.mainProgressbar);
+            progressBar.setVisibility(View.GONE);
             populateList(jsonString);
            /* } catch (JSONException ex) {
                 messageTextView.setText(ex.getMessage());
@@ -148,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled(String message) {
+            ProgressBar progressBar = findViewById(R.id.mainProgressbar);
+            progressBar.setVisibility(View.GONE);
             TextView messageTextView = findViewById(R.id.main_message_textview);
             messageTextView.setText(message);
             Log.e("BOOKS", message);
